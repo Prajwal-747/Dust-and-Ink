@@ -43,15 +43,26 @@ app.post("/ask-ai", async (req, res) => {
         max_output_tokens: 1000,
       }),
     });
-    console.log(response);
+
     const data = await response.json();
-    console.log(data);
-    const aiText = data.output[0].content[0].text;
+
+    const messageOutput = data.output.find((item) => item.type === "message");
+
+    if (!messageOutput) {
+      return res.status(500).json({
+        error: "No AI message returned",
+      });
+    }
+
+    const aiText = messageOutput.content[0].text;
+
     res.json({
       reply: aiText,
     });
   } catch (error) {
+    console.error("SERVER ERROR:");
     console.error(error);
+
     res.status(500).json({
       error: "AI Request Failed",
     });
