@@ -1,49 +1,59 @@
+import { response } from "express";
+
 console.log("SCRIPT LOADED");
 
 async function generatePostcard() {
   console.log("START GENERATING");
 
-  const response = await fetch("/random-postcard");
+  try {
+    const randomPage = Math.floor(Math.random() * 100) + 1;
 
-  console.log("LOC RESPONSE:");
-  console.log(response);
+    console.log("RANDOM PAGE: ");
+    console.log(randomPage);
 
-  const data = await response.json();
+    const response = await fetch(
+      `https://www.loc.gov/pictures/search/?q=city&fo=json&sp=${randomPage}`,
+    );
 
-  console.log("LOC DATA:");
-  console.log(data);
+    console.log(response.url);
+    console.log(response.status);
 
-  const randomIndex = Math.floor(Math.random() * data.results.length);
+    const data = await response.json();
 
-  console.log("RANDOM INDEX:");
-  console.log(randomIndex);
+    console.log("LOC DATA:");
+    console.log(data);
 
-  const item = data.results[randomIndex];
+    const randomIndex = Math.floor(Math.random() * data.results.length);
 
-  console.log("SELECTED ITEM:");
-  console.log(item);
+    console.log("RANDOM INDEX:");
+    console.log(randomIndex);
 
-  document.getElementById("img-put-here").src = item.image.full;
+    const item = data.results[randomIndex];
 
-  const styles = [
-    "a traveler in 1910",
-    "a lonely train passenger",
-    "an old diary entry",
-    "a fading memory",
-    "a sailor writing home",
-    "someone returning after many years",
-    "a person watching a city slowly change",
-    "a forgotten letter never sent",
-    "a quiet observer sitting near a rainy window",
-    "an exhausted journalist in the 1920s",
-  ];
+    console.log("SELECTED ITEM:");
+    console.log(item);
 
-  const randomStyle = styles[Math.floor(Math.random() * styles.length)];
+    document.getElementById("img-put-here").src = item.image.full;
 
-  console.log("RANDOM STYLE:");
-  console.log(randomStyle);
+    const styles = [
+      "a traveler in 1910",
+      "a lonely train passenger",
+      "an old diary entry",
+      "a fading memory",
+      "a sailor writing home",
+      "someone returning after many years",
+      "a person watching a city slowly change",
+      "a forgotten letter never sent",
+      "a quiet observer sitting near a rainy window",
+      "an exhausted journalist in the 1920s",
+    ];
 
-  const prompt = `
+    const randomStyle = styles[Math.floor(Math.random() * styles.length)];
+
+    console.log("RANDOM STYLE:");
+    console.log(randomStyle);
+
+    const prompt = `
 You are writing a poetic vintage postcard inspired by a historical photograph from the Library of Congress.
 
 Photograph Title:
@@ -77,22 +87,26 @@ The postcard should feel like a real message written decades ago by someone who 
 Keep it between 80 to 140 words.
 `;
 
-  console.log("PROMPT:");
-  console.log(prompt);
+    console.log("PROMPT:");
+    console.log(prompt);
 
-  const aiData = await askAI(prompt);
+    const aiData = await askAI(prompt);
 
-  console.log("AI DATA:");
-  console.log(aiData);
+    console.log("AI DATA:");
+    console.log(aiData);
 
-  const postcardText = document.getElementById("postcard-text");
+    const postcardText = document.getElementById("postcard-text");
 
-  console.log("POSTCARD ELEMENT:");
-  console.log(postcardText);
+    console.log("POSTCARD ELEMENT:");
+    console.log(postcardText);
 
-  postcardText.textContent = aiData.reply;
+    postcardText.textContent = aiData.reply;
 
-  console.log("TEXT INSERTED");
+    console.log("TEXT INSERTED");
+  } catch (error) {
+    console.error("ERROR DURING POSTCARD GENERATION:");
+    console.error(error);
+  }
 }
 
 async function askAI(prompt) {
