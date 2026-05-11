@@ -1,5 +1,3 @@
-import { response } from "express";
-
 console.log("SCRIPT LOADED");
 
 async function generatePostcard() {
