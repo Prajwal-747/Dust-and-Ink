@@ -97,7 +97,7 @@ app.get("/random-postcard", async (req, res) => {
     console.log(randomPage);
 
     const response = await fetch(
-      `https://wwwloc.gov/pictures/search/?q=city&fo=json&sp=${randomPage}`,
+      `https://www.loc.gov/pictures/search/?q=city&fo=json&sp=${randomPage}`,
     );
 
     console.log(response.url);
