@@ -12,6 +12,10 @@ app.use(express.static("public"));
 
 app.post("/ask-ai", async (req, res) => {
   try {
+    console.log("REQUEST RECEIVED");
+
+    console.log(req.body);
+
     const response = await fetch("https://ai.hackclub.com/proxy/v1/responses", {
       method: "POST",
 
@@ -44,17 +48,31 @@ app.post("/ask-ai", async (req, res) => {
       }),
     });
 
+    console.log("FETCH RESPONSE:");
+    console.log(response);
+
     const data = await response.json();
+
+    console.log("FULL AI DATA:");
+    console.log(data);
 
     const messageOutput = data.output.find((item) => item.type === "message");
 
+    console.log("MESSAGE OUTPUT:");
+    console.log(messageOutput);
+
     if (!messageOutput) {
+      console.log("NO MESSAGE OUTPUT FOUND");
+
       return res.status(500).json({
         error: "No AI message returned",
       });
     }
 
     const aiText = messageOutput.content[0].text;
+
+    console.log("FINAL AI TEXT:");
+    console.log(aiText);
 
     res.json({
       reply: aiText,
@@ -65,6 +83,34 @@ app.post("/ask-ai", async (req, res) => {
 
     res.status(500).json({
       error: "AI Request Failed",
+    });
+  }
+});
+
+app.get("/random-postcard", async (req, res) => {
+  try {
+    const randomPage = Math.floor(Math.random() * 100) + 1;
+
+    console.log("RANDOM PAGE:");
+    console.log(randomPage);
+
+    const response = await fetch(
+      `https://loc.gov/pictures/search/?q=city&fo=json&sp=${randomPage}`,
+    );
+
+    console.log(response.url);
+    console.log(response.status);
+
+    const data = await response.json();
+
+    console.log("LOC DATA RECEIVED");
+
+    res.json(data);
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      error: "LOC fetch failed",
     });
   }
 });

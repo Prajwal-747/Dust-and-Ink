@@ -1,27 +1,27 @@
-async function generatePostcard() {
-  const themes = [
-    "railroad",
-    "street",
-    "harbor",
-    "winter",
-    "hotel",
-    "market",
-    "river",
-    "factory",
-    "bridge",
-  ];
+console.log("SCRIPT LOADED");
 
-  const randomTheme = themes[Math.floor(Math.random() * themes.length)];
-  const randomPage = Math.floor(Math.random() * 5393) + 1;
-  const response = await fetch(
-    `https://loc.gov/pictures/search/?q=${randomTheme}&fo=json&sp=${randomPage}`,
-  );
+async function generatePostcard() {
+  console.log("START GENERATING");
+
+  const response = await fetch("/random-postcard");
+
+  console.log("LOC RESPONSE:");
+  console.log(response);
 
   const data = await response.json();
 
+  console.log("LOC DATA:");
+  console.log(data);
+
   const randomIndex = Math.floor(Math.random() * data.results.length);
 
+  console.log("RANDOM INDEX:");
+  console.log(randomIndex);
+
   const item = data.results[randomIndex];
+
+  console.log("SELECTED ITEM:");
+  console.log(item);
 
   document.getElementById("img-put-here").src = item.image.full;
 
@@ -39,6 +39,9 @@ async function generatePostcard() {
   ];
 
   const randomStyle = styles[Math.floor(Math.random() * styles.length)];
+
+  console.log("RANDOM STYLE:");
+  console.log(randomStyle);
 
   const prompt = `
 You are writing a poetic vintage postcard inspired by a historical photograph from the Library of Congress.
@@ -64,20 +67,37 @@ The writing should:
 - avoid sounding like an AI assistant
 - avoid bullet points
 - avoid directly describing the image mechanically
+- Do not use markdown formatting, asterisks, or bullet points.
+- Use restraint.
+- Avoid excessive poetic density.
+- Allow moments of simplicity and silence.
 
 The postcard should feel like a real message written decades ago by someone who briefly passed through this place.
 
 Keep it between 80 to 140 words.
 `;
 
+  console.log("PROMPT:");
+  console.log(prompt);
+
   const aiData = await askAI(prompt);
+
+  console.log("AI DATA:");
+  console.log(aiData);
 
   const postcardText = document.getElementById("postcard-text");
 
+  console.log("POSTCARD ELEMENT:");
+  console.log(postcardText);
+
   postcardText.textContent = aiData.reply;
+
+  console.log("TEXT INSERTED");
 }
 
 async function askAI(prompt) {
+  console.log("ASKING AI");
+
   const response = await fetch("/ask-ai", {
     method: "POST",
 
@@ -90,7 +110,13 @@ async function askAI(prompt) {
     }),
   });
 
+  console.log("AI FETCH RESPONSE:");
+  console.log(response);
+
   const data = await response.json();
+
+  console.log("AI JSON:");
+  console.log(data);
 
   return data;
 }

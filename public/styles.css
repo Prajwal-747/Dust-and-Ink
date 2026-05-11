@@ -30,7 +30,7 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  background: url("assets\pastel-yellow-vignette-concrete-textured-background.jpg");
+  background: url("assets/pastel-yellow-vignette-concrete-textured-background.jpg");
   opacity: 0.12;
   mix-blend-mode: multiply;
   pointer-events: none;
@@ -75,6 +75,7 @@ body {
 
 #postcard-text {
   font-family: Georgia, serif;
+  white-space: pre-line;
   font-size: 20px;
   line-height: 1.8;
   color: rgba(40, 25, 15, 0.85);
