@@ -21,8 +21,10 @@ app.post("/ask-ai", async (req, res) => {
 
       headers: {
         Authorization: `Bearer ${process.env.apiKey}`,
-
         "Content-Type": "application/json",
+
+        "User-Agent": "Mozilla/5.0",
+        Accept: "application/json",
       },
 
       body: JSON.stringify({
@@ -95,7 +97,7 @@ app.get("/random-postcard", async (req, res) => {
     console.log(randomPage);
 
     const response = await fetch(
-      `https://loc.gov/pictures/search/?q=city&fo=json&sp=${randomPage}`,
+      `https://wwwloc.gov/pictures/search/?q=city&fo=json&sp=${randomPage}`,
     );
 
     console.log(response.url);
